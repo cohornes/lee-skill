@@ -48,13 +48,21 @@ This taxonomy is a starting point — refine categories/sub-categories once real
 
 When building the actual Excel/Sheets tracker, every "Dropdown" field should be a real data-validation dropdown sourced from a controlled list tab (client list, underwriter roster, taxonomy categories/sub-categories, etc.) — not free text — so trend analysis stays clean.
 
-## Dashboard Views
+## Governance Rules
 
-- Findings by Error Category / Sub-Category (trend over time — line or bar chart by month)
-- Findings by Underwriter (ranked, to identify repeat issues)
-- Findings by Severity
-- Findings by Root Cause
-- Open vs. Resolved status counts
+- **Master Lists:** Maintain separate "Config" sheets for: Client Names, Underwriter Roster, Reviewer Roster. Never hardcode dropdowns.
+- **New Entries:** If a client or underwriter isn't in the master list, flag it in `notes` and add to Config within 24 hours. Never type free-text names into the main log.
+- **Data Retention:** Keep 24 months rolling. Archive by quarter to a separate "Archive" sheet or file.
+- **Access:** One owner (the manager) has write access to Config. 14 analysts have write access to Raw Log. Management has read access to Dashboard.
+
+## Dashboard Views (Summary Sheet)
+
+1. **Trend by Month:** Count of findings by month, stacked by severity
+2. **Underwriter Heatmap:** Underwriter (rows) × Error Category (columns), color-coded by volume
+3. **Reviewer Catch Rate:** % of findings by reviewer (to identify if certain reviewers are missing specific error types)
+4. **Client Concentration:** Findings by client (are we failing one client's expectations?)
+5. **Resolution Aging:** Open findings > 14 days (escalation trigger)
+6. **Root Cause Trend:** % breakdown of root causes over trailing 6 months
 
 ## Process for logging new findings
 

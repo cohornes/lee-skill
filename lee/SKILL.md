@@ -62,11 +62,13 @@ Ask these together (e.g. via a short set of questions), not buried inside a wall
 
 ### Phase 2: Build
 
-Only after Phase 1 is confirmed. `references/qc-tracker-spec.md` has the standardized starter Error Taxonomy (category + sub-category + severity table) and the Core Schema (a typed, machine-readable field table) — use these as-is rather than inventing categories or fields from scratch. Map every raw client finding to one category + one sub-category from that taxonomy; don't freelance new categories unless the user's data clearly doesn't fit and they confirm a change.
+Only after Phase 1 is confirmed. `references/qc-tracker-spec.md` has the standardized starter Error Taxonomy (category + sub-category + severity table), the Core Schema (typed field table), Governance Rules, and the six specific Dashboard Views — use these as-is rather than inventing categories, fields, or dashboard metrics from scratch. Map every raw client finding to one category + one sub-category from that taxonomy; don't freelance new categories unless the user's data clearly doesn't fit and they confirm a change.
 
 Default deliverable: an Excel tracker (use the `xlsx` skill for this — view `/mnt/skills/public/xlsx/SKILL.md` before building) with:
-- A raw findings log tab (one row per finding, per the Core Schema — every Dropdown field built as a real data-validation dropdown, not free text)
-- A dashboard tab with trends by error type/sub-type, underwriter, severity, and root cause (pivot tables/charts)
+- A **Config** tab — controlled master lists (Client Names, Underwriter Roster, Reviewer Roster, Taxonomy categories/sub-categories) that every dropdown in the log sources from. Never hardcode dropdown options directly into the log tab.
+- A **Raw Log** tab (one row per finding, per the Core Schema — every Dropdown field built as a real data-validation dropdown referencing Config, not free text)
+- A **Dashboard** tab implementing the six views in `references/qc-tracker-spec.md`: Trend by Month (stacked by severity), Underwriter Heatmap (Underwriter × Error Category), Reviewer Catch Rate, Client Concentration, Resolution Aging (open >14 days), and Root Cause Trend (trailing 6 months)
+- Apply the Governance Rules from the spec: note the 24-month rolling retention / quarterly archive convention and the access model (manager owns Config, 14 analysts write to Raw Log, management reads Dashboard) either as a short "Read Me" tab or in your explanation to the user — this isn't just informational, it should shape how you structure sheet protection/permissions guidance in the deliverable.
 
 Adjust the baseline schema/taxonomy based on the Phase 1 answers (e.g. if analysts will input data directly, make sure dropdowns are tightly controlled since more hands touch the sheet; if the user only has report authority, keep the tracker analysis-only and de-emphasize fields like `coaching_assigned` that imply accountability actions).
 
