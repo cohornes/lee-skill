@@ -64,9 +64,43 @@ When building the actual Excel/Sheets tracker, every "Dropdown" field should be 
 5. **Resolution Aging:** Open findings > 14 days (escalation trigger)
 6. **Root Cause Trend:** % breakdown of root causes over trailing 6 months
 
-## Process for logging new findings
+## SOP: Logging New Client Feedback
+
+When a client email arrives:
+1. Forward to shared QC inbox (or designated intake email)
+2. Within 48 hours, assigned reviewer creates ONE row per finding in Raw Log
+3. Map client verbatim to `client_description`
+4. Use taxonomy to assign category, subcategory, severity
+5. If severity = Critical, immediately email manager + flag in `notes`
+6. If root cause is unclear, set status to "Under Review" and schedule a 15-min huddle
+7. Update `resolution_status` within 5 business days of logging
+8. If coaching is assigned, link to coaching log (separate tracker) in `notes`
+
+## Decisions Required Before Build
+
+Answer these before generating the actual tracker file (separate from the Phase 1 discovery questions — these are build-specific):
+
+1. **Tool:** Excel desktop, Excel 365 (co-authoring), or Google Sheets?
+2. **Access:** Will all 14 analysts input simultaneously, or will one person log on behalf of the team?
+3. **Client List:** Is there a static client list, or does it change monthly?
+4. **Underwriter Roster:** Track by name, ID, or both? Do underwriters ever change teams?
+5. **Severity Authority:** Who decides severity — the manager, the client, or a defined rubric?
+6. **Coaching Linkage:** Should this tracker *trigger* coaching assignments, or just *reference* them?
+7. **Output Format:** A downloadable Excel file with formulas, or a text schema to build manually?
+
+## Constraints & Anti-Patterns
+
+- Do NOT suggest SQL databases, Airtable, or Power BI unless explicitly asked.
+- Do NOT create more than 6 dashboard views in the first build. Start simple.
+- Do NOT auto-calculate a "reviewer quality score" from this data — it creates perverse incentives.
+- Do NOT build email parsing automation. Manual logging is the correct MVP.
+- Do NOT merge multiple findings into one row. One finding = one row, always.
+
+## Process for logging new findings (high-level)
 
 1. Management's Excel report of client feedback arrives
 2. Each finding gets logged as a new row in the Raw Findings Log, mapped to one category + one sub-category from the taxonomy, with severity and root cause assigned
 3. Dashboard auto-updates via pivot tables/charts referencing the log
 4. Periodic review (e.g. monthly) to spot trends and flag coaching needs
+
+(For the detailed step-by-step version with timing/escalation rules, see the SOP above.)

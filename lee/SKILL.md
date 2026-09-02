@@ -43,36 +43,62 @@ Always produce the file as a `.md` artifact and present it — this is a reusabl
 
 ## Mode 2: QC Findings Tracking System (Mortgage TPR)
 
+Context: the user manages 14 QC analysts reviewing the work of 200 underwriters at a mortgage TPR firm. Clients find errors and email feedback; management compiles this into scattered Excel reports. There's no historical view, no trend analysis, and no systematic way to target coaching — that's the gap this mode closes.
+
 Trigger: the user asks for help tracking QC findings, client-reported errors, underwriter error trends, or building/updating a centralized tracker for a mortgage due diligence (TPR) QC team.
 
-See `references/qc-tracker-spec.md` for the full schema, taxonomy, and build spec developed with the user. Use it as the baseline — don't rebuild from scratch each time, extend/adjust it based on what the user asks for in the moment.
+`references/qc-tracker-spec.md` is the baseline for everything in this mode — the Error Taxonomy, Core Schema, Governance Rules, Dashboard Views, SOP, Decision Gates, and Constraints all live there. Use it as-is; don't invent categories, fields, dashboard metrics, or process steps from scratch. Extend/adjust based on what the user asks for in the moment (e.g. "add a new error category").
 
-This mode runs in two gated phases. Do not skip or collapse them — Phase 2 only starts once the user has explicitly confirmed or answered Phase 1. If this is a follow-up request against an already-built tracker (e.g. "add a new error category," "add a dashboard view") rather than a first build, you can skip straight to Phase 2 and treat the existing tracker/spec as already-answered Phase 1 context.
+This mode runs in four gated phases. Do not skip or collapse them. If this is a follow-up request against an already-built tracker (e.g. "add a new error category," "add a dashboard view") rather than a first build, you can skip straight to whichever phase is relevant and treat earlier phases as already-answered context.
 
-### Phase 1: Discovery & Schema Design
+### Phase 1: Discovery
 
-Before proposing the tracker, interview the user on:
+Before designing anything, ask the user these and wait for answers — don't propose schema or build anything yet:
 1. How many error categories do they suspect exist? (ballpark)
 2. Do they have authority to change underwriter behavior, or only to report?
 3. Is this tracker for their 14 analysts to *input* data, or only for them to *analyze* it?
 4. What's their current Excel pain point: volume, categorization, or reporting?
 5. Do clients send feedback in a standard format, or is every email different?
 
-Ask these together (e.g. via a short set of questions), not buried inside a wall of other text. Wait for the user to confirm or answer before moving to Phase 2 — don't propose schema or build anything yet.
+### Phase 2: Schema & Taxonomy
 
-### Phase 2: Build
+Once Phase 1 is answered, propose (as markdown tables, adapted to their Phase 1 answers — not a file yet):
+1. The Core Schema (from `references/qc-tracker-spec.md`)
+2. The Error Taxonomy (from the spec, adapted — e.g. if they said they suspect far fewer/more categories than the starter seven, discuss that before finalizing)
+3. Severity definitions
+4. Governance Rules
 
-Only after Phase 1 is confirmed. `references/qc-tracker-spec.md` has the standardized starter Error Taxonomy (category + sub-category + severity table), the Core Schema (typed field table), Governance Rules, and the six specific Dashboard Views — use these as-is rather than inventing categories, fields, or dashboard metrics from scratch. Map every raw client finding to one category + one sub-category from that taxonomy; don't freelance new categories unless the user's data clearly doesn't fit and they confirm a change.
+### Phase 3: Tracker Design
 
-Default deliverable: an Excel tracker (use the `xlsx` skill for this — view `/mnt/skills/public/xlsx/SKILL.md` before building) with:
-- A **Config** tab — controlled master lists (Client Names, Underwriter Roster, Reviewer Roster, Taxonomy categories/sub-categories) that every dropdown in the log sources from. Never hardcode dropdown options directly into the log tab.
-- A **Raw Log** tab (one row per finding, per the Core Schema — every Dropdown field built as a real data-validation dropdown referencing Config, not free text)
-- A **Dashboard** tab implementing the six views in `references/qc-tracker-spec.md`: Trend by Month (stacked by severity), Underwriter Heatmap (Underwriter × Error Category), Reviewer Catch Rate, Client Concentration, Resolution Aging (open >14 days), and Root Cause Trend (trailing 6 months)
-- Apply the Governance Rules from the spec: note the 24-month rolling retention / quarterly archive convention and the access model (manager owns Config, 14 analysts write to Raw Log, management reads Dashboard) either as a short "Read Me" tab or in your explanation to the user — this isn't just informational, it should shape how you structure sheet protection/permissions guidance in the deliverable.
+Describe the full system design (still not the final file — this is the "here's what I'd build" walkthrough):
+1. **Raw Findings Log** — one row per finding, using the Core Schema
+2. **Config / Master Lists** sheet — dropdown sources (Client Names, Underwriter Roster, Reviewer Roster, Taxonomy)
+3. **Dashboard Summary** sheet with the six views from the spec
+4. **SOP for logging new feedback** — the checklist from the spec
 
-Adjust the baseline schema/taxonomy based on the Phase 1 answers (e.g. if analysts will input data directly, make sure dropdowns are tightly controlled since more hands touch the sheet; if the user only has report authority, keep the tracker analysis-only and de-emphasize fields like `coaching_assigned` that imply accountability actions).
+### Phase 4: Decision Gates
 
-If the user just wants advice/schema design (not a file), answer inline instead of forcing a file.
+Before generating any downloadable file, confirm the user's answers to the "Decisions Required Before Build" list in `references/qc-tracker-spec.md` (tool choice, access model, client list volatility, roster tracking, severity authority, coaching linkage, output format). Don't build the file until these are answered — a text schema and a formula-driven Excel file are different amounts of work and the wrong default wastes effort.
+
+### Build
+
+Only after Phase 4 is confirmed. Use the `xlsx` skill (view `/mnt/skills/public/xlsx/SKILL.md` before building) unless the Decision Gates answers pointed to Google Sheets or a text schema instead. Deliverable:
+- **Config** tab — controlled master lists, never hardcoded dropdown options
+- **Raw Log** tab — every Dropdown field built as a real data-validation dropdown referencing Config
+- **Dashboard** tab — the six views, including conditional formatting for Critical severity and Resolution Aging >14 days
+- Apply Governance Rules (retention/archive convention, access model) as a short "Read Me" tab or in your explanation
+
+If the user just wants advice/schema design (not a file), stop at whichever phase answers their question — don't force a file.
+
+### Constraints (apply throughout this mode)
+
+See "Constraints & Anti-Patterns" in `references/qc-tracker-spec.md` — most importantly: don't suggest SQL/Airtable/Power BI unless asked, don't exceed 6 dashboard views on a first build, never auto-calculate a "reviewer quality score," don't build email-parsing automation, and always one finding = one row.
+
+### Output format
+
+- Schema and taxonomy: markdown tables in chat, not a file, until Phase 4 is confirmed
+- Tracker structure: sheet-by-sheet instructions
+- Once the user confirms "build the file": a downloadable Excel file with pre-populated dropdowns from master lists, dashboard formulas (COUNTIFS, pivot-ready), and conditional formatting for Critical severity and aging >14 days
 
 ## Combining both modes
 
