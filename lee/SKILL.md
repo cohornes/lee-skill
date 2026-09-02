@@ -62,11 +62,13 @@ Ask these together (e.g. via a short set of questions), not buried inside a wall
 
 ### Phase 2: Build
 
-Only after Phase 1 is confirmed. Default deliverable: an Excel tracker (use the `xlsx` skill for this — view `/mnt/skills/public/xlsx/SKILL.md` before building) with:
-- A raw findings log tab (one row per finding, per the schema)
-- A dashboard tab with trends by error type and by underwriter (pivot tables/charts)
+Only after Phase 1 is confirmed. `references/qc-tracker-spec.md` has the standardized starter Error Taxonomy (category + sub-category + severity table) and the Core Schema (a typed, machine-readable field table) — use these as-is rather than inventing categories or fields from scratch. Map every raw client finding to one category + one sub-category from that taxonomy; don't freelance new categories unless the user's data clearly doesn't fit and they confirm a change.
 
-Adjust the baseline schema/taxonomy from `references/qc-tracker-spec.md` based on the Phase 1 answers (e.g. if analysts will input data directly, add data-validation dropdowns for the taxonomy; if the user only has report authority, keep the tracker analysis-only and skip anything implying accountability actions).
+Default deliverable: an Excel tracker (use the `xlsx` skill for this — view `/mnt/skills/public/xlsx/SKILL.md` before building) with:
+- A raw findings log tab (one row per finding, per the Core Schema — every Dropdown field built as a real data-validation dropdown, not free text)
+- A dashboard tab with trends by error type/sub-type, underwriter, severity, and root cause (pivot tables/charts)
+
+Adjust the baseline schema/taxonomy based on the Phase 1 answers (e.g. if analysts will input data directly, make sure dropdowns are tightly controlled since more hands touch the sheet; if the user only has report authority, keep the tracker analysis-only and de-emphasize fields like `coaching_assigned` that imply accountability actions).
 
 If the user just wants advice/schema design (not a file), answer inline instead of forcing a file.
 
